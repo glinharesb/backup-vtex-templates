@@ -18,9 +18,12 @@ app.get('/', (_req, res) => {
 app.post('/', (req, res) => {
   const { folderName, fileName, content } = req.body;
 
-  if (!folderName) throw 'Expected parameter: folderName';
-  else if (!fileName) throw 'Expected parameter: fileName';
-  else if (!content) throw 'Expected parameter: content';
+  let error = [];
+  if (!folderName) error.push('Missing parameter: folderName');
+  if (!fileName) error.push('Missing parameter: fileName');
+  if (!content) error.push('Missing parameter: content');
+
+  if (error.length > 0) return res.status(400).json(error);
 
   const dir = `./dist/${folderName}`;
   if (!fs.existsSync(dir)) {
@@ -30,15 +33,15 @@ app.post('/', (req, res) => {
   fs.writeFile(`${dir}/${fileName}.html`, content, (err) => {
     if (err) {
       console.log('\x1b[31m', `~ File "${fileName}.html" not saved`);
-      return res.sendStatus(500);
+      return res.status(500).json(err);
     }
 
     console.log('\x1b[32m', `~ File "${fileName}.html" saved!`);
-    res.sendStatus(200);
+    res.status(200).json(req.body);
   });
 });
 
 const port = 3001;
 app.listen(port, () => {
-  console.log(`~ 🚀 Server listening on: http://localhost:${port}`);
+  console.log('\x1b[34m', `~ 🚀 Server listening on: http://localhost:${port}`);
 });
