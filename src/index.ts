@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
 
   fs.writeFile(`${dir}/${fileName}.html`, content, (err) => {
     if (err) {
-      console.log('\x1b[31m', `~ File ${fileName}.html not saved`);
+      console.log('\x1b[31m', `~ File "${fileName}.html" not saved`);
       return res.sendStatus(500);
     }
 
@@ -38,6 +38,7 @@ app.post('/', (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log(`~ 🚀 Server listening on: http://localhost:3001`);
+const port = 3001;
+app.listen(port, () => {
+  console.log(`~ 🚀 Server listening on: http://localhost:${port}`);
 });
